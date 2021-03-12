@@ -3,6 +3,7 @@ const mysql = require('mysql');
 
 function greeting() {
     console.log(
+        '\n',
         '----------', '\n',
         'Employee Manager', '\n',
         '----------', '\n',
@@ -12,110 +13,417 @@ greeting();
 
 function mainMenu() {
     inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "option",
+            message: "What would you like to do?",
+            choices: [
+                'View All Employees',
+                'View All Employees By Department',
+                'View All Employees By Manager',
+                'Add Employee',
+                'Remove Employee',
+                'Update Employee Role',
+                'Update Employee Manager',
+                'View All Roles',
+                'Add Role',
+                'Remove Role',
+                'View All Departments',
+                'Add Department',
+                'Remove Department',
+                'Quit'
+            ]
+        }
+    ])
+    .then((answers) => {
+        console.log(answers);
+        switch (answers.option) {
+            case "View All Employees":
+                // I want to console log a table of all employees
+                // console.table, probably going to join tables
+                viewAllEmployees();
+                break;
+            case "View All Employees By Department":
+                // Select * from employees where department='';
+                // console.table employees by department
+                getByDepartment();
+                break;
+            case "View All Employees By Manager":
+                // Select * from employees where manager='';
+                // console.table employees by manager
+                getByManager();
+                break;
+            case "Add Employee":
+                // Create row with employee information
+                // first and last name, role, manager
+                // should be able to see employee if view all employees is selected
+                addEmployee();
+                break;
+            case "Remove Employee":
+                // query to delete employee where
+                removeEmployee();
+                break;
+            case "Update Employee Role":
+                // select employee from db where name='' and update role to ${var}.
+                updateEmployeeRole();
+                break;
+            case "Update Employee Manager":
+                // first select employee, then change manager column to='';
+                updateEmployeeManager();
+                break;
+            case "View All Roles":
+                //  console.table id/title/department/salary','\n',
+                viewRoles();
+                break;
+            case "Add Role":
+                // new roleshould show up when creating new employee
+                addRole();
+                break;
+            case "Remove Role":
+                // query to delete role where
+                removeRole();
+                break;
+            case "View All Departments":
+                // I want to console log a table of all departments
+                // console.table, probably going to join tables
+                viewAllDepartments();
+                break;
+            case "Add Department":
+                // Create row with department information
+                // name
+                // should be able to see department if view all departments is selected
+                addDepartment();
+                break;
+            case "Remove Department":
+                // query to delete department where
+                removeDepartment();
+                break;
+            case "Quit":
+                console.log("Goodbye!");
+                break;
+        }
+    })
+    .catch(err => console.log(err));
+}
+
+mainMenu()
+
+function viewAllEmployees() {
+    // query for employees to then console.log
+}
+
+function getByDepartment() {
+    inquirer
         .prompt([
             {
                 type: "list",
-                name: "option",
-                message: "What would you like to do?",
+                name: "getByDepartment",
+                message: "Which department would you like to see employees for?",
                 choices: [
-                    'View All Employees',
-                    'View All Employees By Department',
-                    'View All Employees By Manager',
-                    'Add Employee',
-                    'Remove Employee',
-                    'Update Employee Role',
-                    'Update Employee Manager',
-                    'View All Roles',
-                    'Add Role',
-                    'Remove Role',
-                    'View All Departments',
-                    'Add Department',
-                    'Remove Department',
-                    'Quit'
+                    'Engineering',
+                    'Finance',
+                    'Legal',
+                    'Sales'
                 ]
             }
-        ])
-        .then((answers) => {
-            console.log(
-                `${answers.option}`, '\n', '\n',
-                'Goodbye!', '\n',
-            );
-        })};
+        ]).then((answers) => {
+            // console.logs table of employees by department
+            console.log(answers.getByDepartment);
 
-        mainMenu();
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
 
-// console.log('Hello World');
-// console.log(
-//     '!!!Employee Manager ascii art!!!', '\n', '\n',
-//     '--------------------------', '\n', '\n',
-//     'What would you like to do?', '\n',
-//     '1 View All Employees', '\n',
-//     '2 View All Employees By Department', '\n',
-//     '3 View All Employees By Manager', '\n',
-//     '4 Add Employee', '\n',
-//     '5 Remove Employee', '\n',
-//     '6 Update Employee Role', '\n',
-//     '7 Update Employee Manager', '\n',
-//     '8 View All Roles', '\n',
-//     '9 Add Role', '\n',
-//     '10 Remove Role', '\n',
-//     '11 View All Departments', '\n',
-//     '12 Add Department', '\n',
-//     '13 Remove Department', '\n',
-//     '14 Quit', '\n', '\n',
-//     'If 1: console.table', '\n',
-//     'If 2: Which department would you like to see employees for?',
-//     'Engineering, Finance, Legal, Sales', '\n',
-//     'If Engineering: console.table', '\n',
-//     'If 7: Which employee do you want to see direct reports for?', '\n',
-//     'John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupik, Kunal Singh, Malia Brown, Sarah Laurd, Tom Allen,', '\n',
-//     'If 4: What is the employee"s first name?', '\n',
-//     'If 4: What is the employee"s last name?', '\n',
-//     'If 4: What is the employee"s role?', '\n',
-//     'The Roles: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer', '\n',
-//     'If 4: Who is the employee"s manager?', '\n',
-//     'The Managers: John Doe, Mike Chan, Ashley Rodriguez, Kevin Tupic, Kunal Singh, Malia Brown, Sarah Lourd, Tom Allen, None', '\n',
-//     'After filling out, if 1: then new employee will show', '\n',
-//     'If 5: Which employee do you want to remove?', '\n',
-//     'If 6: Which employee"s role do you want to update?', '\n',
-//     'If 6: Which role do you want to assign the selected employee?', '\n',
-//     'If 7: Which employee"s manager do you want to update?', '\n',
-//     'Which employee do you want to set as manager for the selected employee? - can be null/none','\n',
-//     'If 8: console.table id/title/department/salary','\n',
-//     'If 9: What is the name of the role?', '\n',
-//     'This is custom input from the user','\n',
-//     'If 9: What is the salary of the role?', '\n',
-//     'Which department does the role belong to?', '\n',
-//     'The departments: Engineering, Finance, Legal, Sales', '\n',
-//     'New role would then show up when creating a new Employee','\n',
-//     'If 14: console.log"Goodbye!"'
-// );
+function getByManager() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "getByManager",
+                message: "Which employee manager would you like to search for?",
+                choices: [
+                    'Ashley Rodriguez',
+                    'John Doe',
+                    'Sara Lourd',
+                    'Malia Brown'
+                ]
+            }
+        ]).then((answers) => {
+            console.log(answers.getByManager);
+            // console.logs table of employees by manager
 
-/*
-1 Sales Lead Sales 100000
-2 Salesperson Sales 80000
-3 Lead Engineer Engineering 150000
-4 Software Engineer Engineering 120000
-5 Account Manager Finance 160000
-6 Accountant Finance 125000
-7 Legal Team Lead Legal 250000
-8 Lawyer Legal 190000
-*/
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
 
-/*
-Titles are in Departments:
-Sales Lead = in Sales
-Salesperson = Sales
-Lead Engineer = Engineering
-Software Engineer = Engineering
-Account Manager = Finance
-Accountant = Finance
-Legal Team Lead = Legal
-Lawyer = Legal
-*/
+function addEmployee() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "firstName",
+                message: "What is the employee's first name?"
+            },
+            {
+                type: "input",
+                name: "lastName",
+                message: "What is the employee's last name?"
+            },
+            {
+                type: "list",
+                name: "role",
+                message: "What is the employee's role?",
+                choices: [
+                    'Sales Lead',
+                    'Salesperson',
+                    'Lead Engineer',
+                    'Software Engineer',
+                    'Accountant Manager',
+                    'Accountant',
+                    'Legal Team Lead',
+                    'Lawyer'
+                ]
+            },
+            {
+                type: "list",
+                name: "manager",
+                message: "Who is the employee's manager?",
+                choices: [
+                    'John Doe',
+                    'Mike Chan',
+                    'Ashley Rodriguez',
+                    'Kevin Tupic',
+                    'Kunal Singh',
+                    'Malia Brown',
+                    'Sarah Lourd',
+                    'Tom Allen',
+                    'None'
+                ]
+            }
+        ]).then((answers) => {
+            console.log(answers.firstName);
+            console.log(answers.lastName);
+            console.log(answers.role);
+            console.log(answers.manager);
 
-/*
-columns for View All Employees: id, first_name, last_name, title, department, salary, manager
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
 
-salaries: 80000, 190000, 25000, 125000, 160000, 120000, 150000, 100000
-*/
+function removeEmployee() {
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "removeEmployee",
+            message: "Which employee do you want to remove?",
+            choices: [
+                'John Doe',
+                'Mike Chan',
+                'Ashley Rodriguez',
+                'Kevin Tupik',
+                'Malia Brown',
+                'Sarah Lourd',
+                'Tom Allen',
+                'Tammer Galal'
+            ]
+        }
+    ]).then((answers) => {
+        console.log(answers.removeEmployee + ' has successfully been removed.');
+
+        // calls table until user quits
+        mainMenu()
+    }).catch(err => console.log(err));
+}
+
+function updateEmployeeRole() {
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "updateEmployeeRole1",
+            message: "Which employee do you want to update?",
+            choices: [
+                'John Doe',
+                'Mike Chan',
+                'Ashley Rodriguez',
+                'Kevin Tupik',
+                'Malia Brown',
+                'Sarah Lourd',
+                'Tom Allen',
+                'Tammer Galal'
+            ]
+        },
+        {
+            type: "list",
+            name: "updateEmployeeRole2",
+            message: "Which role do you want to assign the selected employee?",
+            choices: [
+                'Sales Lead',
+                'Salesperson',
+                'Lead Engineer',
+                'Software Engineer',
+                'Accountant Manager',
+                'Accountant',
+                'Legal Team Lead',
+                'Lawyer'
+            ]
+        },
+    ]).then((answers) => {
+        console.log(answers.updateEmployeeRole1);
+        console.log(answers.updateEmployeeRole2);
+        // console.logs table of employees by department
+
+        // calls table until user quits
+        mainMenu()
+    }).catch(err => console.log(err));
+}
+
+function updateEmployeeManager() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "updateEmployeeManager1",
+                message:  "Which employee do you want to update the manager of?",
+                choices: [
+                    'John Doe',
+                    'Mike Chan',
+                    'Ashley Rodriguez',
+                    'Kevin Tupik',
+                    'Malia Brown',
+                    'Sarah Lourd',
+                    'Tom Allen',
+                    'Tammer Galal'
+                ]
+            },
+            {
+                type: "list",
+                name: "updateEmployeeManager2",
+                message:  "Who do you want to update the manager to?",
+                choices: [
+                    'John Doe',
+                    'Mike Chan',
+                    'Ashley Rodriguez',
+                    'Kevin Tupik',
+                    'Malia Brown',
+                    'Sarah Lourd',
+                    'Tom Allen',
+                    'Tammer Galal'
+                ]
+            }
+        ]).then((answers) => {
+            console.log(answers.updateEmployeeManager1);
+            console.log(answers.updateEmployeeManager2);
+            // console.logs table of employees by department
+
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
+
+function addRole() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "newRoleName",
+                message: "What is the name of the role?"
+            },
+            {
+                type: "input",
+                name: "newRoleSalary",
+                message: "What is the salary of the role?"
+            },
+            {
+                type: "input",
+                name: "newRoleDepartment",
+                message: "Which department does the role belong to?",
+                choices: [
+                    'Engineering',
+                    'Finance',
+                    'Legal',
+                    'Sales'
+                ]
+            }
+        ]).then((answers) => {
+            console.log(answers.newRoleName);
+            console.log(answers.newRoleSalary);
+            console.log(answers.newRoleDepartment);
+
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
+
+function removeRole() {
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "removeRole",
+            message: "Which role do you want to remove?",
+            choices: [
+                'Sales Lead',
+                'Salesperson',
+                'Lead Engineer',
+                'Software Engineer',
+                'Accountant Manager',
+                'Accountant',
+                'Legal Team Lead',
+                'Lawyer'
+            ]
+        }
+    ]).then((answers) => {
+        console.log(answers.removeRole + ' has successfully been removed.');
+
+        // calls table until user quits
+        mainMenu()
+    }).catch(err => console.log(err));
+}
+
+function viewAllDepartments() {
+    // query for departments to then console.log
+}
+
+function addDepartment() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "departmentName",
+                message: "What is the employee's first name?"
+            },
+        ]).then((answers) => {
+            console.log(answers.departmentName);
+
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
+
+function removeDepartment() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "removeDepartment",
+                message: "Which role do you want to remove?",
+                choices: [
+                    'Engineering',
+                    'Finance',
+                    'Legal',
+                    'Sales'
+                ]
+            }
+        ]).then((answers) => {
+            console.log(answers.removeDepartment + ' has successfully been removed.');
+
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
