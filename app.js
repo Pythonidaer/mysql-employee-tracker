@@ -1,6 +1,14 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
+let query = 
+`SELECT e.id, e.first_name, e.last_name, r.title, d.name department, r.salary, 
+Concat(m.first_name, ' ', m.last_name) manager
+from employee e 
+inner join role r on e.role_id = r.id
+inner join department d on r.department_id = d.id 
+left join employee m on m.id = e.manager_id`
+
 // create the connection information for the sql database
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -188,41 +196,23 @@ function addEmployee() {
 }
 
 function viewAllEmployees() {
-    // query for employees to then console.log
-    connection.query('SELECT * FROM employee', (err, results) => {
+    // let query = 
+    // `SELECT e.id, e.first_name, e.last_name, r.title, d.name department, r.salary, m.manager_id manager
+    // from employee e inner join role r on e.role_id = r.id
+    // inner join department d on r.department_id = d.id left join employee m on m.manager_id = e.id`
+
+    connection.query(query, (err, results) => {
         if (err) {
-            console.log('Mayhem!!: ', err)
+            console.log('Mayhem!! ', err)
         } else {
-
-        //     let query =
-        //     'SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist ';
-        //   query +=
-        //     'FROM top_albums INNER JOIN top5000 ON (top_albums.artist = top5000.artist AND top_albums.year ';
-        //   query +=
-        //     '= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year, top_albums.position';
-
-        //     let query = 
-        //         'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_id ';
-        //         query +=
-        //         'FROM employee INNER JOIN role ON (employee.id = role.id AND employee.id = employee.manager_id) WHERE
-    
-        //   connection.query(query, [answer.artist, answer.artist], (err, res) => {
-        //     console.log(`${res.length} matches found!`);
-        //     res.forEach(({ year, position, artist, song, album }, i) => {
-        //       const num = i + 1;
-        //       console.log(
-        //         `${num} Year: ${year} Position: ${position} || Artist: ${artist} || Song: ${song} || Album: ${album}`
-        //       );
-        //     });
-
             console.log('\n');
             console.table(results);
             console.log('\n');
             mainMenu()
         }
-    }
-    );
+        })
 }
+
 
 function getByDepartment() {
     inquirer
@@ -239,11 +229,61 @@ function getByDepartment() {
                 ]
             }
         ]).then((answers) => {
-            // console.logs table of employees by department
-            console.log(answers.getByDepartment);
-
-            // calls table until user quits
-            mainMenu()
+            // depending on which which option the user selects, add that where statement to filter that department
+            switch (answers.getByDepartment) {
+                case "Engineering":
+                    let queryE = query + ` where name='engineering'`;
+                    connection.query(queryE, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+                case "Finance":
+                    let queryF = query + ` where name='finance'`;
+                    connection.query(queryF, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+                case "Legal":
+                    let queryL = query + ` where name='legal'`;
+                    connection.query(queryL, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+                case "Sales":
+                    let queryS = query + ` where name='sales'`;
+                    connection.query(queryS, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+            }
         }).catch(err => console.log(err));
 }
 
