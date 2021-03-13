@@ -37,7 +37,31 @@ CREATE TABLE department (
 -- select * from role;
 -- select * from department;
 
+/* EMPLOYEES */
+-- Creates new rows containing data in all named columns --
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("John", "Doe", 1, 3);
 
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Mike", "Chan", 2, 1);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Ashley", "Rodriguez", 3, null);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Kevin", "Tupic", 4, 3);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Malia", "Brown", 6, null);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Sarah", "Lourd", 7, null);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Tom", "Allen", 8, 7);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Tammer", "Galal", 4, 5);
 
 /* ROLES */
 -- Creates new rows containing data in all named columns --

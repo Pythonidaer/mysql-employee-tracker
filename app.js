@@ -1,6 +1,21 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
+// create the connection information for the sql database
+const connection = mysql.createConnection({
+    host: 'localhost',
+  
+    // Your port; if not 3306
+    port: 3306,
+  
+    // Your username
+    user: 'root',
+  
+    // Your password
+    password: 'root',
+    database: 'employees_db',
+  });
+
 function greeting() {
     console.log(
         '\n',
@@ -74,7 +89,7 @@ function mainMenu() {
                 break;
             case "View All Roles":
                 //  console.table id/title/department/salary','\n',
-                viewRoles();
+                viewAllRoles();
                 break;
             case "Add Role":
                 // new roleshould show up when creating new employee
@@ -101,7 +116,9 @@ function mainMenu() {
                 break;
             case "Quit":
                 console.log("Goodbye!");
-                break;
+                connection.end();
+                process.exit();
+                // break; -- unnecessary since above exits out of the node app
         }
     })
     .catch(err => console.log(err));
@@ -109,55 +126,11 @@ function mainMenu() {
 
 mainMenu()
 
-function viewAllEmployees() {
-    // query for employees to then console.log
-}
 
-function getByDepartment() {
-    inquirer
-        .prompt([
-            {
-                type: "list",
-                name: "getByDepartment",
-                message: "Which department would you like to see employees for?",
-                choices: [
-                    'Engineering',
-                    'Finance',
-                    'Legal',
-                    'Sales'
-                ]
-            }
-        ]).then((answers) => {
-            // console.logs table of employees by department
-            console.log(answers.getByDepartment);
 
-            // calls table until user quits
-            mainMenu()
-        }).catch(err => console.log(err));
-}
-
-function getByManager() {
-    inquirer
-        .prompt([
-            {
-                type: "list",
-                name: "getByManager",
-                message: "Which employee manager would you like to search for?",
-                choices: [
-                    'Ashley Rodriguez',
-                    'John Doe',
-                    'Sara Lourd',
-                    'Malia Brown'
-                ]
-            }
-        ]).then((answers) => {
-            console.log(answers.getByManager);
-            // console.logs table of employees by manager
-
-            // calls table until user quits
-            mainMenu()
-        }).catch(err => console.log(err));
-}
+// ===================================
+// ======= EMP: C, R, U, U, D ========
+// =================================== 
 
 function addEmployee() {
     inquirer
@@ -214,30 +187,87 @@ function addEmployee() {
         }).catch(err => console.log(err));
 }
 
-function removeEmployee() {
-    inquirer
-    .prompt([
-        {
-            type: "list",
-            name: "removeEmployee",
-            message: "Which employee do you want to remove?",
-            choices: [
-                'John Doe',
-                'Mike Chan',
-                'Ashley Rodriguez',
-                'Kevin Tupik',
-                'Malia Brown',
-                'Sarah Lourd',
-                'Tom Allen',
-                'Tammer Galal'
-            ]
-        }
-    ]).then((answers) => {
-        console.log(answers.removeEmployee + ' has successfully been removed.');
+function viewAllEmployees() {
+    // query for employees to then console.log
+    connection.query('SELECT * FROM employee', (err, results) => {
+        if (err) {
+            console.log('Mayhem!!: ', err)
+        } else {
 
-        // calls table until user quits
-        mainMenu()
-    }).catch(err => console.log(err));
+        //     let query =
+        //     'SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist ';
+        //   query +=
+        //     'FROM top_albums INNER JOIN top5000 ON (top_albums.artist = top5000.artist AND top_albums.year ';
+        //   query +=
+        //     '= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year, top_albums.position';
+
+        //     let query = 
+        //         'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_id ';
+        //         query +=
+        //         'FROM employee INNER JOIN role ON (employee.id = role.id AND employee.id = employee.manager_id) WHERE
+    
+        //   connection.query(query, [answer.artist, answer.artist], (err, res) => {
+        //     console.log(`${res.length} matches found!`);
+        //     res.forEach(({ year, position, artist, song, album }, i) => {
+        //       const num = i + 1;
+        //       console.log(
+        //         `${num} Year: ${year} Position: ${position} || Artist: ${artist} || Song: ${song} || Album: ${album}`
+        //       );
+        //     });
+
+            console.log('\n');
+            console.table(results);
+            console.log('\n');
+            mainMenu()
+        }
+    }
+    );
+}
+
+function getByDepartment() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "getByDepartment",
+                message: "Which department would you like to see employees for?",
+                choices: [
+                    'Engineering',
+                    'Finance',
+                    'Legal',
+                    'Sales'
+                ]
+            }
+        ]).then((answers) => {
+            // console.logs table of employees by department
+            console.log(answers.getByDepartment);
+
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
+}
+
+function getByManager() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "getByManager",
+                message: "Which employee manager would you like to search for?",
+                choices: [
+                    'Ashley Rodriguez',
+                    'John Doe',
+                    'Sara Lourd',
+                    'Malia Brown'
+                ]
+            }
+        ]).then((answers) => {
+            console.log(answers.getByManager);
+            // console.logs table of employees by manager
+
+            // calls table until user quits
+            mainMenu()
+        }).catch(err => console.log(err));
 }
 
 function updateEmployeeRole() {
@@ -326,6 +356,37 @@ function updateEmployeeManager() {
         }).catch(err => console.log(err));
 }
 
+function removeEmployee() {
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "removeEmployee",
+            message: "Which employee do you want to remove?",
+            choices: [
+                'John Doe',
+                'Mike Chan',
+                'Ashley Rodriguez',
+                'Kevin Tupik',
+                'Malia Brown',
+                'Sarah Lourd',
+                'Tom Allen',
+                'Tammer Galal'
+            ]
+        }
+    ]).then((answers) => {
+        console.log(answers.removeEmployee + ' has successfully been removed.');
+
+        // calls table until user quits
+        mainMenu()
+    }).catch(err => console.log(err));
+}
+
+
+// ===================================
+// ========== ROLE: C, R, D ==========
+// ===================================
+
 function addRole() {
     inquirer
         .prompt([
@@ -360,6 +421,21 @@ function addRole() {
         }).catch(err => console.log(err));
 }
 
+function viewAllRoles() {
+    connection.query('SELECT * FROM role', (err, results) => {
+        if (err) {
+            console.log('Mayhem!!: ', err)
+        } else {
+
+            console.log('\n');
+            console.table(results);
+            console.log('\n');
+            mainMenu()
+        }
+    }
+    );
+}
+
 function removeRole() {
     inquirer
     .prompt([
@@ -386,24 +462,60 @@ function removeRole() {
     }).catch(err => console.log(err));
 }
 
-function viewAllDepartments() {
-    // query for departments to then console.log
-}
 
+// ===================================
+// ========== DEPT: C, R, D ==========
+// ===================================
 function addDepartment() {
     inquirer
         .prompt([
             {
                 type: "input",
                 name: "departmentName",
-                message: "What is the employee's first name?"
+                message: "What is the name of the department?"
             },
         ]).then((answers) => {
-            console.log(answers.departmentName);
+            // console.log(answers.departmentName);
+
+// ==================================================
+            connection.query(
+                'INSERT INTO department SET ?',
+                // QUESTION: What does the || 0 do?
+                {
+                name: answers.departmentName
+                },
+                (err) => {
+                    if (err) {
+                        console.log('Error: ', err)
+                    } else {
+                        console.log('Your department was created successfully!');
+                        // re-prompt the user for if they want to bid or post
+                        mainMenu()
+
+                    }
+                }
+            );
+
+// ==================================================
 
             // calls table until user quits
             mainMenu()
         }).catch(err => console.log(err));
+}
+
+function viewAllDepartments() {
+    connection.query('SELECT * FROM department', (err, results) => {
+        if (err) {
+            console.log('Mayhem!!: ', err)
+        } else {
+
+            console.log('\n');
+            console.table(results);
+            console.log('\n');
+            mainMenu()
+        }
+    }
+    );
 }
 
 function removeDepartment() {
