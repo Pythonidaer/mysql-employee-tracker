@@ -65,8 +65,8 @@ VALUES ("Tammer", "Galal", 4, 5);
 
 /* ROLES */
 -- Creates new rows containing data in all named columns --
-INSERT INTO role (title, salary)
-VALUES ("Sales Lead", 100000);
+INSERT INTO role (title, salary department_id)
+VALUES ("Sales Lead", 100000, 1);
 
 INSERT INTO role (title, salary)
 VALUES ("Salesperson", 80000);
@@ -104,25 +104,7 @@ INSERT INTO department (name)
 VALUES ("Sales");
 
 
-
--- Creates new rows containing data in all named columns --
-INSERT INTO people (name, has_pet, pet_name, pet_age)
-VALUES ("Ahmed", TRUE, "Rockington", 100);
-
-INSERT INTO people (name, has_pet, pet_name, pet_age)
-VALUES ("Ahmed", TRUE, "Rockington", 100);
-
-INSERT INTO people (name, has_pet, pet_name, pet_age)
-VALUES ("Jacob", TRUE, "Misty", 10);
-
-INSERT INTO people (name, has_pet)
-VALUES ("Peter", false);
-
 -- Updates the row where the column name is peter --
 UPDATE people
 SET has_pet = true, pet_name = "Franklin", pet_age = 2
 WHERE name = "Peter";
-
--- SELECT * FROM employee;
--- select * from role;
--- select * from department;

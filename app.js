@@ -185,13 +185,65 @@ function addEmployee() {
                 ]
             }
         ]).then((answers) => {
-            console.log(answers.firstName);
-            console.log(answers.lastName);
-            console.log(answers.role);
-            console.log(answers.manager);
-
-            // calls table until user quits
-            mainMenu()
+            // console.log(answers.firstName);
+            // console.log(answers.lastName);
+            // console.log(answers.role);
+            // console.log(answers.manager);
+            // connection.query('SELECT * FROM department', (err, results) => {
+                switch (answers.manager) {
+                    case "John Doe":
+                        connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                        VALUES ('${answers.firstName}', '${answers.lastName}', 1, 1)`, (err) => {
+                                if (err) {
+                                    console.log('Mayhem!! ', err)
+                                } else {
+                                    console.log('\n');
+                                    // console.table(results);
+                                    console.log('\n');
+                                    mainMenu()
+                                }
+                            })
+                        break;
+                    // case "Mike Chan":
+                    //     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                    //     VALUES ("Mike", "Chan", 1, 5)`, (err, results) => {
+                    //             if (err) {
+                    //                 console.log('Mayhem!! ', err)
+                    //             } else {
+                    //                 console.log('\n');
+                    //                 console.table(results);
+                    //                 console.log('\n');
+                    //                 mainMenu()
+                    //             }
+                    //         })
+                    //     break;
+                    // case "Ashley Rodriguez":
+                    //     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                    //     VALUES ("Ashley", "Rodriguez", 1, 5)`, (err, results) => {
+                    //             if (err) {
+                    //                 console.log('Mayhem!! ', err)
+                    //             } else {
+                    //                 console.log('\n');
+                    //                 console.table(results);
+                    //                 console.log('\n');
+                    //                 mainMenu()
+                    //             }
+                    //         })
+                    //     break;
+                    // case "Kevin Tupic":
+                    //     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                    //     VALUES ("Kevin", "Tupic", 1, 5)`, (err, results) => {
+                    //             if (err) {
+                    //                 console.log('Mayhem!! ', err)
+                    //             } else {
+                    //                 console.log('\n');
+                    //                 console.table(results);
+                    //                 console.log('\n');
+                    //                 mainMenu()
+                    //             }
+                    //         })
+                    //     break;
+                }
         }).catch(err => console.log(err));
 }
 
@@ -303,10 +355,60 @@ function getByManager() {
             }
         ]).then((answers) => {
             console.log(answers.getByManager);
-            // console.logs table of employees by manager
-
-            // calls table until user quits
-            mainMenu()
+            switch (answers.getByManager) {
+                case "Ashley Rodriguez":
+                    let queryAR = query + ` where e.manager_id=3`;
+                    connection.query(queryAR, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+                case "John Doe":
+                    let queryJD = query + ` where e.manager_id=1`;
+                    connection.query(queryJD, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+                case "Sara Lourd":
+                    let querySL = query + ` where e.manager_id=6`;
+                    connection.query(querySL, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+                case "Malia Brown":
+                    let queryMB = query + ` where e.manager_id=5`;
+                    connection.query(queryMB, (err, results) => {
+                            if (err) {
+                                console.log('Mayhem!! ', err)
+                            } else {
+                                console.log('\n');
+                                console.table(results);
+                                console.log('\n');
+                                mainMenu()
+                            }
+                        })
+                    break;
+            }
         }).catch(err => console.log(err));
 }
 
@@ -411,14 +513,28 @@ function removeEmployee() {
                 'Malia Brown',
                 'Sarah Lourd',
                 'Tom Allen',
-                'Tammer Galal'
+                'Tammer Galal',
+                'Jefferson Walter'
             ]
         }
     ]).then((answers) => {
-        console.log(answers.removeEmployee + ' has successfully been removed.');
 
-        // calls table until user quits
-        mainMenu()
+        // an array of words like [ 'John', 'Doe' ]
+       let firstLast = answers.removeEmployee.split(" ")
+        switch (answers.removeEmployee) {
+            case `${answers.removeEmployee}`:
+                connection.query(`DELETE FROM employees_db.employee WHERE (first_name = '${firstLast[0]}' AND last_name = '${firstLast[1]}')`, (err) => {
+                        if (err) {
+                            console.log('Mayhem!! ', err)
+                        } else {
+                            console.log('\n');
+                            console.log(answers.removeEmployee + ' has successfully been removed.');
+                            console.log('\n');
+                            mainMenu()
+                        }
+                    })
+                break;
+        }
     }).catch(err => console.log(err));
 }
 
@@ -432,17 +548,17 @@ function addRole() {
         .prompt([
             {
                 type: "input",
-                name: "newRoleName",
+                name: "title",
                 message: "What is the name of the role?"
             },
             {
                 type: "input",
-                name: "newRoleSalary",
+                name: "salary",
                 message: "What is the salary of the role?"
             },
             {
-                type: "input",
-                name: "newRoleDepartment",
+                type: "list",
+                name: "deptid",
                 message: "Which department does the role belong to?",
                 choices: [
                     'Engineering',
@@ -452,12 +568,30 @@ function addRole() {
                 ]
             }
         ]).then((answers) => {
-            console.log(answers.newRoleName);
-            console.log(answers.newRoleSalary);
-            console.log(answers.newRoleDepartment);
 
-            // calls table until user quits
-            mainMenu()
+            switch (answers.deptid) {
+                case 'Engineering':
+                    answers.deptid = 1
+                    break;
+                case 'Finance':
+                    answers.deptid = 2
+                    break;
+                case 'Legal':
+                    answers.deptid = 3
+                    break;
+                case 'Sales':
+                    answers.deptid = 4
+                    break;        
+            }
+            connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${answers.title}", ${answers.salary}, ${answers.deptid})`, (err) => {
+                if (err) {
+                    console.log('Error: ', err)
+                } else {
+                    console.log('Your role was created successfully!');
+                    mainMenu()
+                }
+            }
+        );
         }).catch(err => console.log(err));
 }
 
@@ -491,14 +625,26 @@ function removeRole() {
                 'Accountant Manager',
                 'Accountant',
                 'Legal Team Lead',
-                'Lawyer'
+                'Lawyer',
+                'Marketing'
             ]
         }
     ]).then((answers) => {
-        console.log(answers.removeRole + ' has successfully been removed.');
 
-        // calls table until user quits
-        mainMenu()
+        switch (answers.removeRole) {
+            case `${answers.removeRole}`:
+                connection.query(`DELETE FROM employees_db.role WHERE (title = '${answers.removeRole}')`, (err) => {
+                        if (err) {
+                            console.log('Mayhem!! ', err)
+                        } else {
+                            console.log('\n');
+                            console.log(answers.removeRole + ' has successfully been removed.');
+                            console.log('\n');
+                            mainMenu()
+                        }
+                    })
+                break;
+        }
     }).catch(err => console.log(err));
 }
 
@@ -515,31 +661,15 @@ function addDepartment() {
                 message: "What is the name of the department?"
             },
         ]).then((answers) => {
-            // console.log(answers.departmentName);
-
-// ==================================================
-            connection.query(
-                'INSERT INTO department SET ?',
-                // QUESTION: What does the || 0 do?
-                {
-                name: answers.departmentName
-                },
-                (err) => {
+            connection.query(`INSERT INTO department (name) VALUES ("${answers.departmentName}")`, (err) => {
                     if (err) {
                         console.log('Error: ', err)
                     } else {
                         console.log('Your department was created successfully!');
-                        // re-prompt the user for if they want to bid or post
                         mainMenu()
-
                     }
                 }
             );
-
-// ==================================================
-
-            // calls table until user quits
-            mainMenu()
         }).catch(err => console.log(err));
 }
 
@@ -565,17 +695,30 @@ function removeDepartment() {
                 type: "list",
                 name: "removeDepartment",
                 message: "Which role do you want to remove?",
+                // This is not dynamic. Therefore, users will not be able to remove any other departments but this! :(
+                // Future development: consider mapping an array, or storing a variable here attached to a function elsewhere
                 choices: [
                     'Engineering',
                     'Finance',
                     'Legal',
-                    'Sales'
+                    'Sales',
+                    'Human Resources'
                 ]
             }
         ]).then((answers) => {
-            console.log(answers.removeDepartment + ' has successfully been removed.');
-
-            // calls table until user quits
-            mainMenu()
+       switch (answers.removeDepartment) {
+           case `${answers.removeDepartment}`:
+               connection.query(`DELETE FROM employees_db.department WHERE (name = '${answers.removeDepartment}')`, (err) => {
+                       if (err) {
+                           console.log('Mayhem!! ', err)
+                       } else {
+                           console.log('\n');
+                           console.log(answers.removeDepartment + ' has successfully been removed.');
+                           console.log('\n');
+                           mainMenu()
+                       }
+                   })
+               break;
+       }
         }).catch(err => console.log(err));
 }
