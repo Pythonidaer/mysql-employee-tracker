@@ -60,7 +60,6 @@ function mainMenu() {
         }
     ])
     .then((answers) => {
-        console.log(answers);
         switch (answers.option) {
             case "View All Employees":
                 // I want to console log a table of all employees
@@ -162,7 +161,7 @@ function addEmployee() {
                     'Salesperson',
                     'Lead Engineer',
                     'Software Engineer',
-                    'Accountant Manager',
+                    'Account Manager',
                     'Accountant',
                     'Legal Team Lead',
                     'Lawyer'
@@ -177,82 +176,87 @@ function addEmployee() {
                     'Mike Chan',
                     'Ashley Rodriguez',
                     'Kevin Tupic',
-                    'Kunal Singh',
                     'Malia Brown',
                     'Sarah Lourd',
                     'Tom Allen',
+                    'Tammer Galal',
                     'None'
                 ]
             }
         ]).then((answers) => {
-            // console.log(answers.firstName);
-            // console.log(answers.lastName);
-            // console.log(answers.role);
-            // console.log(answers.manager);
-            // connection.query('SELECT * FROM department', (err, results) => {
-                switch (answers.manager) {
-                    case "John Doe":
-                        connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                        VALUES ('${answers.firstName}', '${answers.lastName}', 1, 1)`, (err) => {
-                                if (err) {
-                                    console.log('Mayhem!! ', err)
-                                } else {
-                                    console.log('\n');
-                                    // console.table(results);
-                                    console.log('\n');
-                                    mainMenu()
-                                }
-                            })
+
+                switch (answers.role) {
+                    case 'Sales Lead':
+                        answers.role = 4
                         break;
-                    // case "Mike Chan":
-                    //     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                    //     VALUES ("Mike", "Chan", 1, 5)`, (err, results) => {
-                    //             if (err) {
-                    //                 console.log('Mayhem!! ', err)
-                    //             } else {
-                    //                 console.log('\n');
-                    //                 console.table(results);
-                    //                 console.log('\n');
-                    //                 mainMenu()
-                    //             }
-                    //         })
-                    //     break;
-                    // case "Ashley Rodriguez":
-                    //     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                    //     VALUES ("Ashley", "Rodriguez", 1, 5)`, (err, results) => {
-                    //             if (err) {
-                    //                 console.log('Mayhem!! ', err)
-                    //             } else {
-                    //                 console.log('\n');
-                    //                 console.table(results);
-                    //                 console.log('\n');
-                    //                 mainMenu()
-                    //             }
-                    //         })
-                    //     break;
-                    // case "Kevin Tupic":
-                    //     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-                    //     VALUES ("Kevin", "Tupic", 1, 5)`, (err, results) => {
-                    //             if (err) {
-                    //                 console.log('Mayhem!! ', err)
-                    //             } else {
-                    //                 console.log('\n');
-                    //                 console.table(results);
-                    //                 console.log('\n');
-                    //                 mainMenu()
-                    //             }
-                    //         })
-                    //     break;
+                    case 'Salesperson':
+                        answers.role = 4
+                        break;
+                    case 'Lead Engineer':
+                        answers.role = 1
+                        break;
+                    case 'Software Engineer':
+                        answers.role = 1
+                        break;        
+                    case 'Accounta Manager':
+                        answers.role = 2
+                        break;
+                    case 'Accountant':
+                        answers.role = 2
+                        break;
+                    case 'Legal Team Lead':
+                        answers.role = 3
+                        break;
+                    case 'Lawyer':
+                        answers.role = 3
+                        break;        
                 }
+
+                switch (answers.manager) {
+                    case 'John Doe':
+                        answers.manager = 1
+                        break;
+                    case 'Mike Chan':
+                        answers.manager = 2
+                        break;
+                    case 'Ashley Rodriguez':
+                        answers.manager = 3
+                        break;
+                    case 'Kevin Tupic':
+                        answers.manager = 4
+                        break;        
+                    case 'Malia Brown':
+                        answers.manager = 5
+                        break;
+                    case 'Sarah Lourd':
+                        answers.manager = 6
+                        break;
+                    case 'Tom Allen':
+                        answers.manager = 7
+                        break;
+                    case 'Tammer Galal':
+                        answers.manager = 8
+                        break;        
+                    case 'None':
+                        answers.manager = null
+                        break;        
+                }
+
+                connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                VALUES ('${answers.firstName}', '${answers.lastName}', ${answers.role}, ${answers.manager})`, (err) => {
+                        if (err) {
+                            console.log('Mayhem!! ', err)
+                        } else {
+                            console.log('\n');
+                            console.log(`Employee ${answers.firstName} ${answers.lastName} was created successfully!`);
+                            console.log('\n');
+                            mainMenu()
+                        }
+                    })
         }).catch(err => console.log(err));
 }
 
 function viewAllEmployees() {
-    // let query = 
-    // `SELECT e.id, e.first_name, e.last_name, r.title, d.name department, r.salary, m.manager_id manager
-    // from employee e inner join role r on e.role_id = r.id
-    // inner join department d on r.department_id = d.id left join employee m on m.manager_id = e.id`
-
     connection.query(query, (err, results) => {
         if (err) {
             console.log('Mayhem!! ', err)
@@ -514,7 +518,7 @@ function removeEmployee() {
                 'Sarah Lourd',
                 'Tom Allen',
                 'Tammer Galal',
-                'Jefferson Walter'
+                'Gunner Nelson'
             ]
         }
     ]).then((answers) => {
