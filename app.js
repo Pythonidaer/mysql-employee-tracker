@@ -431,7 +431,8 @@ function updateEmployeeRole() {
                 'Malia Brown',
                 'Sarah Lourd',
                 'Tom Allen',
-                'Tammer Galal'
+                'Tammer Galal',
+                'Gunner Nelson'
             ]
         },
         {
@@ -443,21 +444,54 @@ function updateEmployeeRole() {
                 'Salesperson',
                 'Lead Engineer',
                 'Software Engineer',
-                'Accountant Manager',
+                'Account Manager',
                 'Accountant',
                 'Legal Team Lead',
                 'Lawyer'
             ]
         },
     ]).then((answers) => {
-        console.log(answers.updateEmployeeRole1);
-        console.log(answers.updateEmployeeRole2);
-        // console.logs table of employees by department
+        let firstLast = answers.updateEmployeeRole1.split(" ")
 
-        // calls table until user quits
-        mainMenu()
+        switch (answers.updateEmployeeRole2) {
+            case 'Sales Lead':
+                answers.updateEmployeeRole2 = 1
+                break;
+            case 'Salesperson':
+                answers.updateEmployeeRole2 = 2
+                break;
+            case 'Lead Engineer':
+                answers.updateEmployeeRole2 = 3
+                break;
+            case 'Software Engineer':
+                answers.updateEmployeeRole2 = 4
+                break;        
+            case 'Accounta Manager':
+                answers.updateEmployeeRole2 = 5
+                break;
+            case 'Accountant':
+                answers.updateEmployeeRole2 = 6
+                break;
+            case 'Legal Team Lead':
+                answers.updateEmployeeRole2 = 7
+                break;
+            case 'Lawyer':
+                answers.updateEmployeeRole2 = 8
+                break;        
+        }
+
+        connection.query(`UPDATE employee SET role_id = ${answers.updateEmployeeRole2} WHERE (first_name = "${firstLast[0]}" AND last_name = "${firstLast[1]}")`, (err) => {
+            if (err) {
+                console.log('Error: ', err)
+            } else {
+                console.log('Employee role was updated successfully!');
+                mainMenu()
+            }
+        }
+        );
     }).catch(err => console.log(err));
 }
+
 
 function updateEmployeeManager() {
     inquirer
@@ -474,7 +508,8 @@ function updateEmployeeManager() {
                     'Malia Brown',
                     'Sarah Lourd',
                     'Tom Allen',
-                    'Tammer Galal'
+                    'Tammer Galal',
+                    'Gunner Nelson'
                 ]
             },
             {
@@ -485,20 +520,62 @@ function updateEmployeeManager() {
                     'John Doe',
                     'Mike Chan',
                     'Ashley Rodriguez',
-                    'Kevin Tupik',
+                    'Kevin Tupic',
                     'Malia Brown',
                     'Sarah Lourd',
                     'Tom Allen',
-                    'Tammer Galal'
+                    'Tammer Galal',
+                    'Gunner Nelson',
+                    'None'
                 ]
             }
         ]).then((answers) => {
-            console.log(answers.updateEmployeeManager1);
-            console.log(answers.updateEmployeeManager2);
-            // console.logs table of employees by department
+            // This will also lead to errors because the manager_id is not dynamic
+            // aka when bootcamp installs this Gunner Nelson's id will not be 13, resulting in a manager of null.
+            let firstLast = answers.updateEmployeeManager1.split(" ")
 
-            // calls table until user quits
-            mainMenu()
+            switch (answers.updateEmployeeManager2) {
+                case 'John Doe':
+                    answers.updateEmployeeRole2 = 1
+                    break;
+                case 'Mike Chan':
+                    answers.updateEmployeeRole2 = 2
+                    break;
+                case 'Ashley Rodriguez':
+                    answers.updateEmployeeRole2 = 3
+                    break;
+                case 'Kevin Tupic':
+                    answers.updateEmployeeRole2 = 4
+                    break;        
+                case 'Malia Brown':
+                    answers.updateEmployeeRole2 = 5
+                    break;
+                case 'Sarah Lourd':
+                    answers.updateEmployeeRole2 = 6
+                    break;
+                case 'Tom Allen':
+                    answers.updateEmployeeRole2 = 7
+                    break;
+                case 'Tammer Galal':
+                    answers.updateEmployeeRole2 = 8
+                    break;        
+                case 'Gunner Nelson':
+                    answers.updateEmployeeRole2 = 13
+                    break;        
+                case 'None':
+                    answers.updateEmployeeRole2 = null
+                    break;        
+            }
+    
+            connection.query(`UPDATE employee SET manager_id = ${answers.updateEmployeeRole2} WHERE (first_name = "${firstLast[0]}" AND last_name = "${firstLast[1]}")`, (err) => {
+                if (err) {
+                    console.log('Error: ', err)
+                } else {
+                    console.log('Employee manager was updated successfully!');
+                    mainMenu()
+                }
+            }
+            );
         }).catch(err => console.log(err));
 }
 
